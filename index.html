@@ -1,13 +1,179 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>music-playlist</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Music Playlist</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #141e30, #243b55);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .player {
+      width: 350px;
+      background: #1e1e1e;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    h1 {
+      color: #1db954;
+    }
+
+    #songTitle {
+      margin: 20px 0;
+      font-size: 20px;
+    }
+
+    button {
+      background: #1db954;
+      border: none;
+      color: white;
+      padding: 12px 18px;
+      margin: 5px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    button:hover {
+      background: #1ed760;
+    }
+
+    .playlist {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .song {
+      padding: 12px;
+      margin: 5px 0;
+      background: #2b2b2b;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .song:hover,
+    .song.active {
+      background: #1db954;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="player">
+    <h1>🎵 My Playlist</h1>
+
+    <div id="songTitle">Choose a song</div>
+
+    <audio id="audio"></audio>
+
+    <div>
+      <button onclick="previousSong()">⏮</button>
+      <button onclick="playPause()">▶️</button>
+      <button onclick="nextSong()">⏭</button>
+    </div>
+
+    <div class="playlist" id="playlist"></div>
+  </div>
+
+  <script>
+    const songs = [
+      {
+        title: "Song One",
+        file: "song1.mp3"
+      },
+      {
+        title: "Song Two",
+        file: "song2.mp3"
+      },
+      {
+        title: "Song Three",
+        file: "song3.mp3"
+      }
+    ];
+
+    let currentSong = 0;
+
+    const audio = document.getElementById("audio");
+    const songTitle = document.getElementById("songTitle");
+    const playlist = document.getElementById("playlist");
+
+    function loadSong(index) {
+      currentSong = index;
+      audio.src = songs[index].file;
+      songTitle.textContent = songs[index].title;
+
+      document.querySelectorAll(".song").forEach((song, i) => {
+        song.classList.toggle("active", i === index);
+      });
+    }
+
+    function playPause() {
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    }
+
+    function nextSong() {
+      currentSong++;
+
+      if (currentSong >= songs.length) {
+        currentSong = 0;
+      }
+
+      loadSong(currentSong);
+      audio.play();
+    }
+
+    function previousSong() {
+      currentSong--;
+
+      if (currentSong < 0) {
+        currentSong = songs.length - 1;
+      }
+
+      loadSong(currentSong);
+      audio.play();
+    }
+
+    songs.forEach((song, index) => {
+      const div = document.createElement("div");
+
+      div.className = "song";
+      div.textContent = song.title;
+
+      div.onclick = () => {
+        loadSong(index);
+        audio.play();
+      };
+
+      playlist.appendChild(div);
+    });
+
+    audio.addEventListener("ended", nextSong);
+
+    loadSong(0);
+  </script>
+
+</body>
 </html>
+
+Save the code as index.html.
+Put your music files in the same folder:
+song1.mp3
+song2.mp3
+song3.mp3
